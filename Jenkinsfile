@@ -1,7 +1,5 @@
 pipeline{
-    agent {
-        dockerfile true
-    }
+    agent any
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('fiqrimaulanaar-dockerhub')
@@ -28,14 +26,22 @@ pipeline{
         
         stage('Build docker image'){
             steps{
-                sh "docker build -t fiqrimaulanaar/spring-boot-hello-world ."
+                script{
+                    withDockerContainer(image: '', toolName: 'docker'){
+                        sh "docker build -t fiqrimaulanaar/spring-boot-hello-world ."
+                    }
+                }
             }
         }
 
         stage('Push image to Docker Hub'){
-            steps{
-                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
-                sh "docker push fiqrimaulanaar/spring-boot-hello-world"
+            steps {
+                script{
+                    withDockerContainer(image: '', toolName: 'docker'){
+                        sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                        sh "docker push fiqrimaulanaar/spring-boot-hello-world"
+                    }
+                }
             }
         }
     }
