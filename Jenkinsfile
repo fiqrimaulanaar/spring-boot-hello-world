@@ -25,23 +25,25 @@ pipeline{
         }
         
         stage('Build docker image'){
-            steps{
-                script{
-                    withDockerContainer(image: '', toolName: 'docker'){
-                        sh "docker build -t fiqrimaulanaar/spring-boot-hello-world ."
-                    }
+            agent {
+                docker {
+                    image 'openjdk:21'
                 }
+            }
+            steps{
+                sh "docker build -t fiqrimaulanaar/spring-boot-hello-world ."
             }
         }
 
         stage('Push image to Docker Hub'){
-            steps {
-                script{
-                    withDockerContainer(image: '', toolName: 'docker'){
-                        sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
-                        sh "docker push fiqrimaulanaar/spring-boot-hello-world"
-                    }
+            agent {
+                docker {
+                    image 'openjdk:21'
                 }
+            }
+            steps{
+                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                sh "docker push fiqrimaulanaar/spring-boot-hello-world"
             }
         }
     }
