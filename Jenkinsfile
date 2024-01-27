@@ -25,7 +25,6 @@ pipeline{
         }
         
         stage('Build docker image'){
-            stage('Build docker image'){
             steps{
                 script{
                     withDockerContainer(image: 'openjdk:21', toolName: 'docker'){
@@ -34,10 +33,9 @@ pipeline{
                 }
             }
         }
-    }
 
         stage('Push image to Docker Hub'){
-            steps {
+            steps{
                 script{
                     withDockerContainer(image: 'openjdk:21', toolName: 'docker'){
                         sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
