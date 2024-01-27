@@ -1,5 +1,7 @@
 pipeline{
-    agent any
+    agent {
+        dockerfile true
+    }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('fiqrimaulanaar-dockerhub')
@@ -8,7 +10,6 @@ pipeline{
     tools {
 		jdk 'jdk'
         maven '3.9.5'
-        docker 'docker'
 	}
 
 
